@@ -1,0 +1,58 @@
+.
+.
+.
+import random
+def display_board(board):
+    print(f"{board[0]} | {board[1]} | {board[2]}")
+    print("--+---+--")
+    print(f"{board[3]} | {board[4]} | {board[5]}")
+    print("--+---+--")
+    print(f"{board[6]} | {board[7]} | {board[8]}")
+
+def is_board_full(board):
+    return ' ' not in board
+def check_win(board, mark):
+    win_conditions = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],  # Rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],  # Columns
+        [0, 4, 8], [2, 4, 6]              # Diagonals
+    ]
+    return any(all(board[cell] == mark for cell in condition) for condition in win_conditions)
+
+def get_player_move(board, player):
+    move = int(input(f"Player {player}, enter your move (1-9): ")) - 1
+    while move < 0 or move > 8 or board[move] != ' ':
+        move = int(input(f"Invalid move. Player {player}, enter your move (1-9): ")) - 1
+    return move
+def get_computer_move(board):
+    available_moves = [i for i, x in enumerate(board) if x == ' ']
+    return random.choice(available_moves)
+def play_game():
+    board = [' ' for _ in range(9)]
+    current_player = 'X'
+    game_mode = input("Enter '1' for single-player or '2' for two-player mode: ")
+
+    while True:
+        display_board(board)
+
+        if game_mode == '1' and current_player == 'O':
+            move = get_computer_move(board)
+        else:
+            move = get_player_move(board, current_player)
+        
+        board[move] = current_player
+
+        if check_win(board, current_player):
+            display_board(board)
+            print(f"Player {current_player} wins!")
+            break
+        
+        if is_board_full(board):
+            display_board(board)
+            print("It's a tie!")
+            break
+        
+        current_player = 'O' if current_player == 'X' else 'X'
+
+if __name__ == "__main__":
+    play_game()
